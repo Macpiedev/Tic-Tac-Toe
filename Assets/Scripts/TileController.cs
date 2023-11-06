@@ -5,8 +5,7 @@ using UnityEngine;
 public class TileController : MonoBehaviour
 {
     public TileModel[] tiles;
-    public bool gameOver = false;
-    private string currentMove = "O";
+    public GameManager gameManager;
     private int moveCount = 0;
     private int gridWidth = 3;
 
@@ -20,9 +19,8 @@ public class TileController : MonoBehaviour
     public void move(string tileName) {
         int tileIndex = tileName[tileName.Length-1] - '0';
         if(tiles[tileIndex - 1].getText() == "") {
-            Debug.Log("Current move: " + currentMove);
-            tiles[tileIndex - 1].changeText(currentMove);
-            updateMove();
+            tiles[tileIndex - 1].changeText(gameManager.getCurrentMove());
+            gameManager.updateMove();
             updateGameStatus(tileIndex - 1);
             moveCount++;
         }
@@ -38,7 +36,6 @@ public class TileController : MonoBehaviour
         int x = tileIndex % gridWidth;
         int y = tileIndex / gridWidth;
         
-
         checkColumns(x);
         checkRows(y);
         if(x == y) {
@@ -64,8 +61,7 @@ public class TileController : MonoBehaviour
             }
 
             if (i == gridWidth - 1) {
-                gameOver = true;
-                Debug.Log(gameOver);
+                gameManager.gameOver();
             }
         }  
     }
@@ -83,8 +79,7 @@ public class TileController : MonoBehaviour
             }
 
             if (i == gridWidth - 1) {
-                gameOver = true;
-                Debug.Log(gameOver);
+                gameManager.gameOver();
             }
         }  
     }
@@ -102,8 +97,7 @@ public class TileController : MonoBehaviour
             }
 
             if (i == gridWidth - 1) {
-                gameOver = true;
-                Debug.Log(gameOver);
+                gameManager.gameOver();
             }
         }
     }
@@ -121,17 +115,8 @@ public class TileController : MonoBehaviour
             }
 
             if (i == gridWidth - 1) {
-                gameOver = true;
-                Debug.Log(gameOver);
+                gameManager.gameOver();
             }
-        }
-    }
-
-    private void updateMove() {
-        if (currentMove == "O") {
-            currentMove = "X";
-        } else {
-            currentMove = "O";
         }
     }
 }
