@@ -7,17 +7,19 @@ public class Opponent : MonoBehaviour
     public TileController tileController;
 
 
-    public int chooseTile() {
+    public int chooseTile(string sign) {
         List<int> tileIds = tileController.availableTilesId();
+        
+        foreach(var id in tileIds) {
+            tileController.changeState(id, sign);
+            if(tileController.checkIfWin(id)) {
+                tileController.removeState(id);
+                return id;
+            }
+            tileController.removeState(id);
+        }
         int randInt = Random.Range(0, tileIds.Count - 1);
-        StartCoroutine(ExecuteAfterTime(2));
 
         return tileIds[randInt];
     }
-
-    IEnumerator ExecuteAfterTime(float time)
-    {
-        yield return new WaitForSeconds(time);
-
-    }   
 }

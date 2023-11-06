@@ -18,10 +18,20 @@ public class TileController : MonoBehaviour
 
     public void move(int tileId, string currentMove) {
         if(tiles[tileId].getText() == "") {
-            tiles[tileId].changeText(currentMove);
-            updateGameStatus(tileId);
+            changeState(tileId, currentMove);
+            if(checkIfWin(tileId)) {
+                win = true;
+            }
             moveCount++;
         }
+    }
+
+    public void changeState(int tileId, string currentMove) {
+        tiles[tileId].changeText(currentMove);
+    }
+
+    public void removeState(int tileId) {
+        tiles[tileId].changeText("");
     }
     
     private string stateAt(int x, int y)
@@ -40,23 +50,25 @@ public class TileController : MonoBehaviour
         return result;
     }
 
-    public void updateGameStatus(int tileIndex) {
+    public bool checkIfWin(int tileIndex) {
         int x = tileIndex % gridWidth;
         int y = tileIndex / gridWidth;
         
-        checkColumns(x);
-        checkRows(y);
+        bool result;
+        result = checkColumns(x) || checkRows(y);
+
         if(x == y) {
-            checkDiagonal();
+            result = result || checkDiagonal();
         }
 
         if(x + y == gridWidth - 1) {
-            checkAntiDiagonal();
-        }
-          
+            result = result || checkAntiDiagonal();
+        } 
+
+        return result;
     }
 
-    private void checkColumns(int x) {
+    private bool checkColumns(int x) {
         string columnPreviousValue = stateAt(x,0);
         string columnNextValue;
 
@@ -69,12 +81,14 @@ public class TileController : MonoBehaviour
             }
 
             if (i == gridWidth - 1) {
-                win = true;
+                return true;
             }
         }  
+
+        return false;
     }
 
-    private void checkRows(int y) {
+    private bool checkRows(int y) {
         string rowPreviousValue = stateAt(0,y);
         string rowNextValue;
 
@@ -87,12 +101,14 @@ public class TileController : MonoBehaviour
             }
 
             if (i == gridWidth - 1) {
-                win = true;
+                return true;
             }
         }  
+        
+        return false;
     }
 
-    private void checkDiagonal() {
+    private bool checkDiagonal() {
         string previousValue = stateAt(0, 0);
         string nextValue;
 
@@ -105,12 +121,14 @@ public class TileController : MonoBehaviour
             }
 
             if (i == gridWidth - 1) {
-                win = true;
+                return true;
             }
         }
+        
+        return false;
     }
 
-    private void checkAntiDiagonal() {
+    private bool checkAntiDiagonal() {
         string previousValue = stateAt(0, gridWidth - 1);
         string nextValue;
 
@@ -123,8 +141,10 @@ public class TileController : MonoBehaviour
             }
 
             if (i == gridWidth - 1) {
-                win = true;
+                return true;
             }
         }
+        
+        return false;
     }
 }

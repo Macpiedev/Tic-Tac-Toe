@@ -1,6 +1,8 @@
 
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
@@ -8,6 +10,8 @@ public class GameManager : MonoBehaviour
     public float restartDelay = 1f;
     public TileController tileController;
     public Opponent opponent;
+    public MatchScore score;
+    public TMP_Text scoreText;
     public bool isPlayerMove = true;
     private int movesCounter = 0;
 
@@ -19,6 +23,7 @@ public class GameManager : MonoBehaviour
         isPlayerMove = false;
         tileController.move(tileId, currentMove);
         if(tileController.win) {
+            score.newWin();        
             gameOver();
         }
         updateMove();
@@ -30,8 +35,9 @@ public class GameManager : MonoBehaviour
         if(movesCounter == 9) {
             gameOver();
         }
-        tileController.move(opponent.chooseTile(), currentMove);
+        tileController.move(opponent.chooseTile(currentMove), currentMove);
         if(tileController.win) {
+            score.newLose();  
             gameOver();
         }
         updateMove();
