@@ -5,9 +5,9 @@ using UnityEngine;
 public class TileController : MonoBehaviour
 {
     public TileModel[] tiles;
-    public GameManager gameManager;
     private int moveCount = 0;
     private int gridWidth = 3;
+    public bool win = false;
 
     void Start() {
         foreach (var tile in tiles) 
@@ -16,12 +16,10 @@ public class TileController : MonoBehaviour
         }
     }
 
-    public void move(string tileName) {
-        int tileIndex = tileName[tileName.Length-1] - '0';
-        if(tiles[tileIndex - 1].getText() == "") {
-            tiles[tileIndex - 1].changeText(gameManager.getCurrentMove());
-            gameManager.updateMove();
-            updateGameStatus(tileIndex - 1);
+    public void move(int tileId, string currentMove) {
+        if(tiles[tileId].getText() == "") {
+            tiles[tileId].changeText(currentMove);
+            updateGameStatus(tileId);
             moveCount++;
         }
     }
@@ -31,8 +29,18 @@ public class TileController : MonoBehaviour
         return tiles[x + gridWidth*y].getText();
     }
 
+    public List<int> availableTilesId() {
+        List<int> result = new List<int>();
+        for(int i = 0; i < tiles.Length; i++ ) {
+            if(tiles[i].getText() == "") {
+                result.Add(i);
+            }
+        }
 
-    private void updateGameStatus(int tileIndex) {
+        return result;
+    }
+
+    public void updateGameStatus(int tileIndex) {
         int x = tileIndex % gridWidth;
         int y = tileIndex / gridWidth;
         
@@ -61,7 +69,7 @@ public class TileController : MonoBehaviour
             }
 
             if (i == gridWidth - 1) {
-                gameManager.gameOver();
+                win = true;
             }
         }  
     }
@@ -79,7 +87,7 @@ public class TileController : MonoBehaviour
             }
 
             if (i == gridWidth - 1) {
-                gameManager.gameOver();
+                win = true;
             }
         }  
     }
@@ -97,7 +105,7 @@ public class TileController : MonoBehaviour
             }
 
             if (i == gridWidth - 1) {
-                gameManager.gameOver();
+                win = true;
             }
         }
     }
@@ -115,7 +123,7 @@ public class TileController : MonoBehaviour
             }
 
             if (i == gridWidth - 1) {
-                gameManager.gameOver();
+                win = true;
             }
         }
     }
