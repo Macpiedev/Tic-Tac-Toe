@@ -35,7 +35,14 @@ public class GameManager : MonoBehaviour
         if(movesCounter == 9) {
             gameOver();
         }
-        tileController.move(opponent.chooseTile(currentMove), currentMove);
+        string oppositeMove;
+        if(currentMove == "X") {
+            oppositeMove = "O";
+        } else {
+            oppositeMove = "X";
+        }
+
+        tileController.move(opponent.chooseTile(currentMove, oppositeMove), currentMove);
         if(tileController.win) {
             score.newLose();  
             gameOver();
